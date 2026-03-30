@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Logic Master 5-Unit - Bug Fixed</title>
+    <title>Logic Master Trio - 5 UNIT Sync Mode</title>
     <style>
         :root {
             --bg: #000; --text: #fff; --box: #111; --border: #333;
@@ -12,10 +12,9 @@
         .light-theme { --bg: #f0f2f5; --text: #1a1a1a; --box: #fff; --border: #d1d9e6; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', sans-serif; }
         body { background: var(--bg); color: var(--text); margin: 0; padding: 0; overflow-x: hidden; }
-
         .global-header {
             position: sticky; top: 0; z-index: 100;
-            background: rgba(0,0,0,0.95); backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(10px);
             padding: 8px; border-bottom: 2px solid #ffd700;
             width: 100%; display: flex; flex-direction: column; align-items: center;
         }
@@ -25,36 +24,30 @@
         .btn-t { background: var(--win); box-shadow: 0 4px 0 #1e8449; }
         .btn-b { background: var(--b-color); box-shadow: 0 4px 0 #800000; }
         .btn:active { transform: translateY(2px); box-shadow: none; }
-        
         .util-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; width: 100%; max-width: 400px; }
-        .btn-sub { padding: 8px 0; border: 1px solid var(--border); border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; background: var(--box); color: var(--text); }
-
-        .app-container { display: flex; flex-direction: column; width: 100%; align-items: center; padding-bottom: 30px; }
+        .btn-sub { padding: 8px 0; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; background: var(--box); color: var(--text); }
+        .app-container { display: flex; flex-direction: column; width: 100%; align-items: center; padding-bottom: 20px; }
         .section { width: 100%; max-width: 400px; padding: 10px; border-bottom: 1px solid var(--border); }
         .unit-info-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-        .unit-label { font-size: 13px; font-weight: 900; color: #ffd700; }
-        .unit-stats { font-size: 10px; font-weight: bold; cursor: pointer; border: 1px dashed #555; padding: 2px 6px; border-radius: 4px; color: #aaa; }
-
+        .unit-label { font-size: 14px; font-weight: 900; color: #ffd700; }
+        .unit-stats { font-size: 11px; font-weight: bold; cursor: pointer; border: 1px dashed #444; padding: 2px 5px; border-radius: 4px; }
         .display-row { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
         .target-circle { 
-            width: 65px; height: 65px; border: 3px solid var(--border); border-radius: 50%; 
+            width: 70px; height: 70px; border: 3px solid var(--border); border-radius: 50%; 
             background: var(--box); display: flex; flex-direction: column; 
             align-items: center; justify-content: center; position: relative; flex-shrink: 0;
         }
-        .target-circle span { font-size: 24px; font-weight: 900; }
-        .dna-info { font-size: 8px; color: #888; position: absolute; bottom: 4px; }
-        .active-P { background: var(--p-color) !important; color: #fff !important; border-color: #fff !important; }
-        .active-B { background: var(--b-color) !important; color: #fff !important; border-color: #fff !important; }
-
+        .target-circle span { font-size: 26px; font-weight: 900; }
+        .dna-info { font-size: 9px; color: #888; position: absolute; bottom: 5px; }
+        .active-P { background: var(--p-color) !important; color: #fff !important; }
+        .active-B { background: var(--b-color) !important; color: #fff !important; }
         .plate { flex-grow: 1; background: var(--box); border-radius: 8px; padding: 4px; border: 1px solid var(--border); }
         .grid { display: grid; grid-template-rows: repeat(6, 1fr); grid-template-columns: repeat(12, 1fr); grid-auto-flow: column; gap: 2px; }
-        .dot { width: 100%; aspect-ratio: 1; border-radius: 50%; background: #222; display: flex; align-items: center; justify-content: center; font-size: 7px; font-weight: 900; color: #fff; }
+        .dot { width: 100%; aspect-ratio: 1; border-radius: 50%; background: #222; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 900; color: #fff; }
         .dot.P { background: var(--p-color); } .dot.B { background: var(--b-color); } .dot.T { background: var(--win); }
-
         .unit-actions { display: flex; gap: 6px; }
         .mini-btn { flex: 1; background: var(--box); border: 1px solid var(--border); color: var(--text); padding: 5px 0; border-radius: 6px; font-size: 10px; cursor: pointer; font-weight: bold; }
-        .mini-btn.on { background: #00f2ff; color: #000; box-shadow: 0 0 10px rgba(0,242,255,0.5); border-color: #fff; }
-
+        .mini-btn.on { background: #00f2ff; color: #000; box-shadow: 0 0 10px rgba(0,242,255,0.5); }
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { background: var(--box); width: 90%; max-width: 300px; border-radius: 15px; padding: 20px; border: 1px solid var(--border); text-align: center; }
         #historyOverlay { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; flex-direction: column; padding: 15px; }
@@ -63,7 +56,6 @@
     </style>
 </head>
 <body>
-
 <div class="global-header">
     <div class="main-btns">
         <button class="btn btn-p" onclick="globalInput('P')">P</button>
@@ -77,7 +69,8 @@
     </div>
 </div>
 
-<div class="app-container" id="unitContainer"></div>
+<div class="app-container" id="unitContainer">
+    </div>
 
 <div id="historyOverlay">
     <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -99,6 +92,7 @@
         <button class="btn-sub" style="margin-top:15px; width:100%; background:#ffd700; color:#000;" onclick="closeModals()">ปิด</button>
     </div>
 </div>
+
 <div id="logicModal" class="modal" onclick="closeModals()"><div class="modal-content"><h4>DNA</h4><div id="dnaOptions" style="display:grid; grid-template-columns:1fr 1fr; gap:5px; max-height:200px; overflow-y:auto;"></div></div></div>
 <div id="lvModal" class="modal" onclick="closeModals()"><div class="modal-content"><h4>LV</h4><div id="lvOptions" style="display:grid; grid-template-columns:repeat(3,1fr); gap:5px;"></div></div></div>
 <div id="woodModal" class="modal" onclick="closeModals()"><div class="modal-content"><h4>ไม้ทบ</h4><div id="woodOptions" style="display:grid; grid-template-columns:repeat(4,1fr); gap:5px;"></div></div></div>
@@ -106,34 +100,63 @@
 <script>
     class LogicController {
         constructor(id, label) {
-            this.id = id; this.label = label;
-            this.renderTarget();
-            this.container = document.getElementById('unit_' + id);
-            const saved = JSON.parse(localStorage.getItem('v5_fix_data_' + id)) || {};
+            this.id = id;
+            this.label = label;
+            this.createUI(); // สร้าง UI สำหรับแต่ละ Unit
+            
+            this.container = document.getElementById(id);
+            const saved = JSON.parse(localStorage.getItem('v3_data_' + id)) || {};
             this.log = saved.log || [];
             this.winHistory = saved.winHistory || [];
             this.selectedLv = saved.selectedLv || 1;
             this.selectedWood = saved.selectedWood || 6;
             this.currentExp = saved.currentExp || 7;
             this.isSuperMode = saved.isSuperMode || false;
-            this.currentStep = 0; this.isFound = false; this.aim = ""; this.isLoss = false; this.lockedDNA = null;
+            
+            this.currentStep = 0;
+            this.isFound = false;
+            this.aim = "";
+            this.isLoss = false;
+            this.lockedDNA = null;
             this.dnaList = [5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
         }
 
-        renderTarget() {
-            const html = `<div id="unit_${this.id}" class="section"><div class="unit-info-bar"><span class="unit-label">UNIT ${this.label}</span><span class="unit-stats" onclick="controllers[${this.id-1}].openHistory()">📜 WIN: <span class="winCount">0</span></span></div><div class="display-row"><div class="target-circle target"><span class="targetText">-</span><div class="dna-info targetDna"></div></div><div class="plate"><div class="grid"></div></div></div><div class="unit-actions"><button class="mini-btn superBtn" onclick="controllers[${this.id-1}].toggleSuperMode()">⚡ SUPER OFF</button><button class="mini-btn" onclick="controllers[${this.id-1}].openSetting()" style="color:#ffd700;">⚙ UNIT ${this.label}</button></div></div>`;
+        createUI() {
+            const html = `
+                <div id="${this.id}" class="section">
+                    <div class="unit-info-bar">
+                        <span class="unit-label">UNIT ${this.label}</span>
+                        <span class="unit-stats" onclick="controllers[${this.label-1}].openHistory()">📜 WIN: <span class="winCount">0</span></span>
+                    </div>
+                    <div class="display-row">
+                        <div class="target-circle target"><span class="targetText">-</span><div class="dna-info targetDna"></div></div>
+                        <div class="plate"><div class="grid"></div></div>
+                    </div>
+                    <div class="unit-actions">
+                        <button class="mini-btn superBtn" onclick="controllers[${this.label-1}].toggleSuperMode()">⚡ SUPER OFF</button>
+                        <button class="mini-btn" onclick="controllers[${this.label-1}].openSetting()" style="color:#ffd700;">⚙ ตั้งค่า UNIT ${this.label}</button>
+                    </div>
+                </div>`;
             document.getElementById('unitContainer').insertAdjacentHTML('beforeend', html);
         }
 
-        save() { localStorage.setItem('v5_fix_data_' + this.id, JSON.stringify({ log: this.log, winHistory: this.winHistory, selectedLv: this.selectedLv, selectedWood: this.selectedWood, currentExp: this.currentExp, isSuperMode: this.isSuperMode })); }
+        save() {
+            const data = {
+                log: this.log, winHistory: this.winHistory, selectedLv: this.selectedLv,
+                selectedWood: this.selectedWood, currentExp: this.currentExp, isSuperMode: this.isSuperMode
+            };
+            localStorage.setItem('v3_data_' + this.id, JSON.stringify(data));
+        }
 
         processAdd(v) {
-            // BUG FIX: ถ้าติด L อยู่ แล้วกด T ให้คงสถานะ L ไว้
-            if (this.isLoss && v === 'T') {
-                this.log.push(v); this.save(); this.render(); return;
+            if (v === 'T') {
+                this.log.push(v);
+                this.save();
+                this.render();
+                return;
             }
 
-            if (this.isFound && v !== 'T') {
+            if (this.isFound) {
                 const hData = { dna: this.lockedDNA || this.currentExp, time: new Date().toLocaleTimeString() };
                 if (v === this.aim) {
                     hData.status = 'WIN'; hData.step = this.currentStep + 1;
@@ -144,24 +167,39 @@
                     if (this.currentStep >= this.selectedWood) {
                         hData.status = 'LOSS'; hData.step = this.selectedWood;
                         this.winHistory.unshift(hData);
-                        this.isLoss = true; this.currentStep = 0; this.isFound = false; this.lockedDNA = null;
+                        this.isLoss = true; 
+                        this.currentStep = 0; this.isFound = false; this.lockedDNA = null;
                     }
                 }
-            } else if (this.isLoss && (v === 'P' || v === 'B')) { 
-                this.isLoss = false; // ล้าง L เฉพาะเมื่อกด P หรือ B
+            } else if (this.isLoss) {
+                this.isLoss = false;
             }
-            this.log.push(v); this.save(); this.render();
+
+            this.log.push(v);
+            this.save();
+            this.render();
         }
 
         undo() {
             if (this.log.length === 0) return;
             const lastInput = this.log.pop();
-            if (lastInput !== 'T' && this.winHistory.length > 0) this.winHistory.shift();
-            this.currentStep = 0; this.isFound = false; this.lockedDNA = null; this.isLoss = false;
-            this.save(); this.render();
+            if (lastInput !== 'T' && this.winHistory.length > 0) {
+                this.winHistory.shift(); 
+            }
+            if (this.winHistory.length > 0 && this.winHistory[0].status === 'LOSS') {
+                this.isLoss = true;
+            } else {
+                this.isLoss = false;
+            }
+            this.currentStep = 0; this.isFound = false; this.lockedDNA = null;
+            this.save();
+            this.render();
         }
 
-        reset() { this.log = []; this.winHistory = []; this.currentStep = 0; this.isFound = false; this.isLoss = false; this.save(); this.render(); }
+        reset() {
+            this.log = []; this.winHistory = []; this.currentStep = 0; this.isFound = false; this.isLoss = false; this.lockedDNA = null;
+            this.save(); this.render();
+        }
 
         render() {
             const clean = this.log.filter(x => x !== 'T');
@@ -169,12 +207,15 @@
             const targetText = this.container.querySelector('.targetText');
             const targetDna = this.container.querySelector('.targetDna');
             const superBtn = this.container.querySelector('.superBtn');
+            
             superBtn.innerText = this.isSuperMode ? "⚡ SUPER ON" : "⚡ SUPER OFF";
             superBtn.className = this.isSuperMode ? "mini-btn superBtn on" : "mini-btn superBtn";
             target.className = "target-circle target"; 
 
             if (this.isLoss) {
-                targetText.innerText = "L"; target.style.color = "var(--loss)";
+                targetText.innerText = "L"; 
+                target.style.color = "var(--loss)";
+                targetDna.innerText = "";
             } else {
                 if (clean.length >= 3) {
                     if (this.isSuperMode && !this.lockedDNA) {
@@ -187,18 +228,24 @@
                         this.isFound = !!this.aim;
                     }
                 }
+
                 if (this.isFound) {
                     targetText.innerText = (this.currentStep + 1) + this.aim;
                     target.classList.add(`active-${this.aim}`);
+                    target.style.color = "";
+                    targetDna.innerText = "2^" + (this.lockedDNA || this.currentExp);
                 } else {
-                    targetText.innerText = "-"; target.style.color = "#444";
+                    targetText.innerText = "-"; 
+                    target.style.color = "#444";
+                    targetDna.innerText = "";
                 }
-                if (this.isFound || this.lockedDNA) targetDna.innerText = "2^" + (this.lockedDNA || this.currentExp);
             }
 
             const grid = this.container.querySelector('.grid');
             grid.innerHTML = "";
-            this.log.slice(-72).forEach(v => { let d = document.createElement('div'); d.className = 'dot ' + v; d.innerText = v; grid.appendChild(d); });
+            this.log.slice(-72).forEach(v => { 
+                let d = document.createElement('div'); d.className = 'dot ' + v; d.innerText = v; grid.appendChild(d); 
+            });
             for(let i=this.log.length; i<72; i++) grid.appendChild(document.createElement('div')).className='dot';
             this.container.querySelector('.winCount').innerText = this.winHistory.filter(h => h.status === 'WIN').length;
         }
@@ -230,7 +277,12 @@
     }
 
     let activeController = null;
-    const controllers = [new LogicController(1, '1'), new LogicController(2, '2'), new LogicController(3, '3'), new LogicController(4, '4'), new LogicController(5, '5')];
+    const controllers = [];
+    // สร้าง 5 Units
+    for(let i=1; i<=5; i++) {
+        controllers.push(new LogicController('app' + i, i));
+    }
+
     function globalInput(v) { controllers.forEach(c => c.processAdd(v)); }
     function globalUndo() { controllers.forEach(c => c.undo()); }
     function globalReset() { if(confirm("ล้างข้อมูลทั้งหมดรวมถึงประวัติ?")) controllers.forEach(c => c.reset()); }
